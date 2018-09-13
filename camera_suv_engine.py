@@ -20,7 +20,7 @@ class CameraSurveillance:
         self.camera = PiCamera()
         self.camera.vflip = True
         self.camera.resolution = (1024, 864)
-        self.camera.frame_rate = 32
+        self.camera.framerate = 32
         self.raw_capture = PiRGBArray(self.camera, size=(1024, 864))
 
         # Some time to initialize camera
@@ -35,7 +35,7 @@ class CameraSurveillance:
         self.box_position = [0] * 100
 
         # Detection parameters
-        self.width_ratio = 1.40
+        self.width_ratio = 0.40
         self.min_area = 40 * 40
         self.threshold_limit = 20
         self.dilation_pixels = 20  # 10
@@ -105,8 +105,8 @@ class CameraSurveillance:
                 if self.ready_contour.empty() is False:
                     self.contours = self.ready_contour.get_nowait()
 
-                if not self.contours:
-                    GPIO.output(20, False)
+                #if not self.contours:
+                #    GPIO.output(20, False)
 
                 for contour in self.contours:
                     if cv2.contourArea(contour) < self.min_area:
