@@ -35,7 +35,7 @@ class CameraSurveillance:
         self.box_position = [0] * 100
 
         # Detection parameters
-        self.width_ratio = 0.40
+        self.alarm_ratio = 1.40
         self.min_area = 40 * 40
         self.threshold_limit = 20
         self.dilation_pixels = 20  # 10
@@ -117,7 +117,7 @@ class CameraSurveillance:
                     cv2.rectangle(frame, (x, y), (x + w, y + h), self.box_color, 2)
                     self.box_position[self.i] = x + y
 
-                    if w > h * self.width_ratio:
+                    if h > w * self.alarm_ratio:
                         #GPIO.output(20, True)
                         self.fall_state = "Alarm!"
                         self.box_color = self.red_box
