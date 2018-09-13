@@ -1,5 +1,4 @@
 
-
 debug = 1
 from picamera.array import PiRGBArray
 from threading import Thread
