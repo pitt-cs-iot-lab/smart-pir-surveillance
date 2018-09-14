@@ -127,11 +127,11 @@ class CameraSurveillance:
                     if h > w * self.alarm_ratio:
                         #GPIO.output(20, True)
                         self.alarm_text = "Alarm!"
+                        self.box_color = self.red_box
                         self.alarm_counter += 1
                         print "Alarm Counter: {}".format(self.alarm_counter)
 
-                        if self.alarm_counter > self.alarm_threshold:
-                            self.box_color = self.red_box
+                        if self.alarm_counter >= self.alarm_threshold:
                             self.intruder_detected = True
                             print "Alarm: " + format(time.time())
 
