@@ -6,8 +6,10 @@ import Queue
 import time
 import cv2
 
-debug = 1
 
+GPIO.setmode(GPIO.BOARD) #Set GPIO to pin numbering
+led_buzzer_pin = 10 #Assign pin 10 to LED
+GPIO.setup(led_buzzer_pin, GPIO.OUT) #Setup GPIO pin for LED as output
 
 class CameraSurveillance:
 
@@ -130,7 +132,11 @@ class CameraSurveillance:
                         self.box_color = self.red_box
                         self.alarm_counter += 1
                         print "Alarm Counter: {}".format(self.alarm_counter)
-
+                        
+                        GPIO.output(led_buzzer_pin, True) #Turn on LED
+                        time.sleep(0.1) #Keep LED on for 4 seconds
+                        GPIO.output(led_buzzer_pin, False) #Turn on LED
+                        
                         if self.alarm_counter >= self.alarm_threshold:
                             self.intruder_detected = True
                             print "Alarm: " + format(time.time())
@@ -181,5 +187,6 @@ class CameraSurveillance:
 
         except KeyboardInterrupt:
             self.camera.release()
+            GPIO.cleanup() #reset all GPIO
             cv2.destroyAllWindows()
             pass
