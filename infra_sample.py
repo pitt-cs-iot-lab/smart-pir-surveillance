@@ -1,8 +1,3 @@
-# MBTechWorks.com 2017
-# Use an HC-SR501 PIR to detect motion (infrared)
-
-#!/usr/bin/python
-
 import RPi.GPIO as GPIO
 import time
 

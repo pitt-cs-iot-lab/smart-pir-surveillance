@@ -8,10 +8,15 @@ import cv2
 
 debug = 1
 
+
 class CameraSurveillance:
 
-    def __init__(self):
-        self.debug = 1
+    def __init__(self, e_debug=True, alarm_threshold=1):
+        self.debug = e_debug
+
+        self.alarm_threshold = alarm_threshold
+        self.alarm_counter = 0
+        self.intruder_detected = False
 
         self.ready_contour = Queue.Queue()
         self.ggframes = Queue.Queue()
@@ -44,7 +49,7 @@ class CameraSurveillance:
         self.contours = []
         self.up_date_frame = 0
         self.first_time = True
-        self.fall_state = ""
+        self.alarm_text = ""
 
         self.red_box = (0, 0, 255)
         self.green_box = (124, 252, 0)
@@ -69,11 +74,13 @@ class CameraSurveillance:
         _, self.contours, _ = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  # find contours
         ready_contour.put(self.contours)
 
-    def start_surveillance(self):
-
+    def start_surveillance(self, surveillance_duration=150):
+        processed_frame = 0
         try:
             # loop for each frame in video
             for frame in self.camera.capture_continuous(self.raw_capture, format="bgr", use_video_port=True):
+
+                processed_frame += 1
 
                 detect_status = "Empty"
                 frame = frame.array
@@ -119,23 +126,36 @@ class CameraSurveillance:
 
                     if h > w * self.alarm_ratio:
                         #GPIO.output(20, True)
-                        self.fall_state = "Alarm!"
-                        self.box_color = self.red_box
-                        print "Alarm: " + format(time.time())
+                        self.alarm_text = "Alarm!"
+                        self.alarm_counter += 1
+                        print "Alarm Counter: {}".format(self.alarm_counter)
+
+                        if self.alarm_counter > self.alarm_threshold:
+                            self.box_color = self.red_box
+                            self.intruder_detected = True
+                            print "Alarm: " + format(time.time())
+
                     else:
-                        self.fall_state = ""
+                        self.alarm_text = ""
                         self.box_color = self.green_box
 
                     self.lastW[self.i] = w
                     self.lastH[self.i] = h
                     # cv2.putText(frame,"{}".format(cv2.contourArea(contour)), (x, y+h+20), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 1)
                     cv2.putText(frame, "{}".format(self.i), (x, y + 22), cv2.FONT_HERSHEY_SIMPLEX, 0.8, self.box_color, 1)
-                    cv2.putText(frame, "{}".format(self.fall_state), (x + 22, y + 22), cv2.FONT_HERSHEY_SIMPLEX, 0.8, self.box_color, 1)
+                    cv2.putText(frame, "{}".format(self.alarm_text), (x + 22, y + 22), cv2.FONT_HERSHEY_SIMPLEX, 0.8, self.box_color, 1)
                     detect_status = "Ok"
                     self.i += 1
 
+                if self.intruder_detected is True:
+                    time.sleep(5.0)
+                    return True
+
+                if processed_frame > surveillance_duration:
+                    return False
+
                 # Hud + fps
-                if debug:
+                if self.debug is True:
                     end = time.time()
                     seconds = end - self.start
                     fps = round((1 / seconds), 1)
