@@ -76,7 +76,16 @@ class CameraSurveillance:
         _, self.contours, _ = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  # find contours
         ready_contour.put(self.contours)
 
-    def start_surveillance(self, surveillance_duration=150):
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        try:
+            self.camera.close()
+        except:
+            pass
+
+    def __enter__(self):
+        return self
+
+    def start_surveillance(self, surveillance_duration=50):
         processed_frame = 0
         try:
             # loop for each frame in video
@@ -155,9 +164,11 @@ class CameraSurveillance:
 
                 if self.intruder_detected is True:
                     time.sleep(5.0)
+                    self.camera.close()
                     return True
 
                 if processed_frame > surveillance_duration:
+                    self.camera.close()
                     return False
 
                 # Hud + fps

@@ -1,3 +1,4 @@
+from threading import Thread
 import RPi.GPIO as GPIO
 import time
 
@@ -13,21 +14,24 @@ print("Press Ctrl+c to end program")
 
 detection_count = 0
 
-try:
-    while True:
-        time.sleep(0.1) #Keep LED on for 4 seconds
-        if GPIO.input(pir) == True: #If PIR pin goes high, motion is detected
-            detection_count = detection_count +1
-            print("Motion Detected! count:{}".format(detection_count))
-            GPIO.output(led, True) #Turn on LED
-            time.sleep(1) #Keep LED on for 4 seconds
-            GPIO.output(led, False) #Turn off LED
-            time.sleep(0.1)
+def 
 
-except KeyboardInterrupt: #Ctrl+c
-    pass #Do nothing, continue to finally
+    try:
+        while True:
+            #time.sleep(0.1) #Keep LED on for 4 seconds
+            if GPIO.input(pir) == True: #If PIR pin goes high, motion is detected
+                detection_count += 1
+                print("Motion Detected! count:{}".format(detection_count))
+                GPIO.output(led, True) #Turn on LED
+                #time.sleep(0.01) #Keep LED on for 4 seconds
+                GPIO.output(led, False) #Turn off LED
+                #time.sleep(0.1)
 
-finally:
-    GPIO.output(led, False) #Turn off LED in case left on
-    GPIO.cleanup() #reset all GPIO
-    print("Program ended")
+    except KeyboardInterrupt: #Ctrl+c
+        pass #Do nothing, continue to finally
+
+    finally:
+        GPIO.output(led, False) #Turn off LED in case left on
+        GPIO.cleanup() #reset all GPIO
+        print("Program ended")
+

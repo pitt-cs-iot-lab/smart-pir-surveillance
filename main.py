@@ -13,24 +13,31 @@ time.sleep(2)  # Give sensor time to startup
 print("Active")
 print("Press Ctrl+c to end program")
 
-scheme = 0
-
+scheme = 1
 
 def main():
+    pir_detection_count = 0
 
     try:
         while True:
-            time.sleep(2)
-            if GPIO.input(pir_pin) is True:  # If PIR pin goes high, motion is detected
-                detection_count = detection_count + 1
-                print("Motion Detected! count:{}".format(detection_count))
+            time.sleep(2.0)
+            if GPIO.input(pir_pin) == True:  # If PIR pin goes high, motion is detected
+                pir_detection_count += 1
+                
+                print("Motion Detected! count:{}".format(pir_detection_count))
                 GPIO.output(led_pin, True)  # Turn on LED
-                time.sleep(0.5)  # Keep LED on for 4 seconds
+                time.sleep(0.1)  # Keep LED on for 4 seconds
                 GPIO.output(led_pin, False)  # Turn off LED
 
-                if scheme is 0:
-                    suvCam = CameraSurveillance()
-                    suvCam.start_surveillance()
+                if scheme is 1:
+                    with CameraSurveillance(True, 30) as suvCam:
+                                        
+                        intruder_detected = suvCam.start_surveillance()
+
+                        if intruder_detected is True:
+                            print "A intruder was detected!!!!!"
+                        else:
+                            print "No Intruder was detected. PIR false alarm"
 
                 time.sleep(0.1)
 
