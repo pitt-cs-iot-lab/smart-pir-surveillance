@@ -12,7 +12,6 @@ led_buzzer_pin = 10 #Assign pin 10 to LED
 GPIO.setup(led_buzzer_pin, GPIO.OUT) #Setup GPIO pin for LED as output
 
 class CameraSurveillance:
-
     def __init__(self, e_debug=True, alarm_threshold=1):
         self.debug = e_debug
 

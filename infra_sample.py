@@ -18,7 +18,6 @@ def
 
     try:
         while True:
-            #time.sleep(0.1) #Keep LED on for 4 seconds
             if GPIO.input(pir) == True: #If PIR pin goes high, motion is detected
                 detection_count += 1
                 print("Motion Detected! count:{}".format(detection_count))

@@ -39,6 +39,9 @@ def main():
                         else:
                             print "No Intruder was detected. PIR false alarm"
 
+                elif scheme is 2:
+                    
+
                 time.sleep(0.1)
 
     except KeyboardInterrupt:  # Ctrl+c
