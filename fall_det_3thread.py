@@ -85,7 +85,6 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
   if ggframes.empty()==False:
     gray=ggframes.get_nowait()
 
-
   if firstFrame is None:
     rawCapture.truncate(0)
     time.sleep(1.0) # let camera autofocus + autosaturation settle

@@ -35,14 +35,12 @@ def main():
                         intruder_detected = suvCam.start_surveillance()
 
                         if intruder_detected is True:
-                            print "A intruder was detected!!!!!"
+                            print("A intruder was detected!!!!!")
                         else:
-                            print "No Intruder was detected. PIR false alarm"
+                            print("No Intruder was detected. PIR false alarm")
 
                 elif scheme is 2:
-                    
-
-                time.sleep(0.1)
+                    time.sleep(0.1)
 
     except KeyboardInterrupt:  # Ctrl+c
         pass  # Do nothing, continue to finally
