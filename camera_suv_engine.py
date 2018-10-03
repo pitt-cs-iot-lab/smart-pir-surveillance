@@ -25,9 +25,9 @@ class CameraSurveillance:
         # Video or camera
         self.camera = PiCamera()
         self.camera.vflip = True
-        self.camera.resolution = (1024, 864)
+        self.camera.resolution = (640, 480)
         self.camera.framerate = 32
-        self.raw_capture = PiRGBArray(self.camera, size=(1024, 864))
+        self.raw_capture = PiRGBArray(self.camera, size=(640, 480))
 
         # Some time to initialize camera
         time.sleep(1.0)
@@ -78,7 +78,7 @@ class CameraSurveillance:
     def __exit__(self, exc_type, exc_val, exc_tb):
         try:
             self.camera.close()
-        except:
+        except Exception as ex:
             pass
 
     def __enter__(self):
@@ -139,7 +139,7 @@ class CameraSurveillance:
                         self.alarm_text = "Alarm!"
                         self.box_color = self.red_box
                         self.alarm_counter += 1
-                        print "Alarm Counter: {}".format(self.alarm_counter)
+                        print("Alarm Counter: {}".format(self.alarm_counter))
                         
                         GPIO.output(led_buzzer_pin, True) #Turn on LED
                         time.sleep(0.1) #Keep LED on for 4 seconds
@@ -147,7 +147,7 @@ class CameraSurveillance:
                         
                         if self.alarm_counter >= self.alarm_threshold:
                             self.intruder_detected = True
-                            print "Alarm: " + format(time.time())
+                            print("Alarm: " + format(time.time()))
 
                     else:
                         self.alarm_text = ""
