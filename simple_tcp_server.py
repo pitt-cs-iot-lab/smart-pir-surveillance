@@ -35,6 +35,6 @@ class SimpleTCPServer:
                         if not data:
                             print('All data received!')
                             break
-                        conn.sendall(data)
+                        #conn.sendall(data)
 
                 requests += 1

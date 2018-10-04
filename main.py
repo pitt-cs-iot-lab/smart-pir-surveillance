@@ -1,6 +1,7 @@
 from camera_suv_engine import *
 import RPi.GPIO as GPIO
 import time
+import socket
 
 
 GPIO.setmode(GPIO.BOARD)  # Set GPIO to pin numbering
@@ -38,6 +39,16 @@ def main():
                             print("A intruder was detected!!!!!")
                         else:
                             print("No Intruder was detected. PIR false alarm")
+
+                        if scheme is 1:
+
+                            HOST = '192.168.1.121'  # The server's hostname or IP address
+                            PORT = 65432  # The port used by the server
+
+                            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                                s.connect((HOST, PORT))
+                                s.sendall(intruder_detected)
+                                #data = s.recv(1024)
 
                 elif scheme is 2:
                     time.sleep(0.1)
