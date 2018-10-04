@@ -30,7 +30,7 @@ def main():
                 GPIO.output(led_pin, False)  # Turn off LED
 
                 if scheme is 1:
-                    with CameraSurveillance(True, 30) as suvCam:
+                    with CameraSurveillance(True, 10) as suvCam:
                                         
                         intruder_detected = suvCam.start_surveillance()
 

@@ -2,7 +2,7 @@ from picamera.array import PiRGBArray
 from threading import Thread
 from picamera import PiCamera
 import RPi.GPIO as GPIO
-import Queue
+import queue
 import time
 import cv2
 
@@ -19,14 +19,14 @@ class CameraSurveillance:
         self.alarm_counter = 0
         self.intruder_detected = False
 
-        self.ready_contour = Queue.Queue()
-        self.ggframes = Queue.Queue()
+        self.ready_contour = queue.Queue()
+        self.ggframes = queue.Queue()
 
         # Video or camera
         self.camera = PiCamera()
         self.camera.vflip = True
         self.camera.resolution = (640, 480)
-        self.camera.framerate = 32
+        self.camera.framerate = 20
         self.raw_capture = PiRGBArray(self.camera, size=(640, 480))
 
         # Some time to initialize camera
@@ -164,10 +164,12 @@ class CameraSurveillance:
                 if self.intruder_detected is True:
                     time.sleep(5.0)
                     self.camera.close()
+                    cv2.destroyAllWindows()
                     return True
 
                 if processed_frame > surveillance_duration:
                     self.camera.close()
+                    cv2.destroyAllWindows()         
                     return False
 
                 # Hud + fps
@@ -196,7 +198,5 @@ class CameraSurveillance:
                     self.first_frame = None
 
         except KeyboardInterrupt:
-            self.camera.release()
-            GPIO.cleanup() #reset all GPIO
             cv2.destroyAllWindows()
             pass
